@@ -6,32 +6,33 @@
     android:layout_height="match_parent"
 
     android:background="@drawable/menu_background"
-    tools:context=".MenuActivity">
+    tools:context=".Activities.MenuActivity">
 
     <Button
         android:id="@+id/gravityButton"
-        android:layout_width="113dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="92dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:onClick="gravityButtonClicked"
+        android:text="@string/gravity_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gyroscopeButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/gravity_button_text" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/gyroscopeButton"
-        android:layout_width="120dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="56dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:onClick="gyroscopeButtonClicked"
+        android:text="@string/gyroscope_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/gravityButton"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/gyroscope_button_text" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
