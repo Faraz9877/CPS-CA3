@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".Activities.GravityActivity">
 
+    <ImageView
+        android:id="@+id/movingBall"
+        android:layout_width="96dp"
+        android:layout_height="73dp"
+        android:contentDescription="@string/moving_ball_image_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ball" />
 </androidx.constraintlayout.widget.ConstraintLayout>
