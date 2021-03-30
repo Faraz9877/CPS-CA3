@@ -20,14 +20,10 @@ import java.util.Random;
 
 public class GravityActivity extends AppCompatActivity implements SensorEventListener{
 
-    //Sensor
     private SensorManager sensorManager;
     private Sensor gravitySensor;
-
     public float readSensorTimestamp = 1;
-
     private View layout;
-
     private Ball ball;
 
     @Override
@@ -74,39 +70,10 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
                 float gravityZ = sensorEvent.values[2];
                 readSensorTimestamp = sensorEvent.timestamp;
                 ball.move(gravityX, gravityY, gravityZ, dT, this.layout);
-//                moveBall(gravityX, gravityY, gravityZ, dT);
                 updateSensorValues(gravityX, gravityY, gravityZ);
             }
         }
     }
-
-//    public void moveBall(float gravityX, float gravityY, float gravityZ, float dT) {
-//        final float time_slice = dT * Config.US2S;
-//        fx = vx == 0 ? (gravityX - (gravityZ * Config.MU_S)) : (gravityX - (gravityZ * Config.MU_K));
-//        fy = vy == 0 ? (gravityY - (gravityZ * Config.MU_S)) : (gravityY - (gravityZ * Config.MU_K));
-//
-//        float ax = fx / Config.MASS;
-//        float ay = fy / Config.MASS;
-//
-//        float newX = (0.5f) * ax * time_slice * time_slice + vx * time_slice + x;
-//        float newY = (0.5f) * ay * time_slice * time_slice  + vy * time_slice + y;
-//
-//        View layout = findViewById(R.id.gravityLayout);
-//
-//        int RIGHTEST_POSITION = layout.getRight() - ball.getWidth();
-//        int BOTTOMMOST_POSITION = layout.getBottom() - ball.getHeight();
-//        x = (newX >= RIGHTEST_POSITION) ? RIGHTEST_POSITION : (float) ((newX <= 0) ? 0 : newX);
-//        y = (newY >= BOTTOMMOST_POSITION) ? BOTTOMMOST_POSITION : (float) ((newY <= 0) ? 0 : newY);
-//
-//        float newVX = ax * time_slice + vx;
-//        float newVY = ay * time_slice + vy;
-//
-//        vx = (newX >= RIGHTEST_POSITION || newX <= 0) ? -newVX * Config.LOSS_COEFFICIENT : newVX;
-//        vy = (newY >= BOTTOMMOST_POSITION || newY <= 0) ? -newVY * Config.LOSS_COEFFICIENT : newVY;
-//
-//        ball.setX((float) this.x);
-//        ball.setY((float) this.y);
-//    }
 
     public void updateSensorValues(float gravityX, float gravityY, float gravityZ) {
         TextView sensorStatus = findViewById(R.id.sensorValues);
