@@ -6,15 +6,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.legendofbounca.Config.Config;
 import com.example.legendofbounca.R;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class GravityActivity extends AppCompatActivity implements SensorEventListener{
@@ -91,6 +90,7 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
                 double gravityZ = sensorEvent.values[2];
                 readSensorTimestamp = sensorEvent.timestamp;
                 moveBall(gravityX, gravityY, gravityZ, dT);
+                updateSensorValues(gravityX, gravityY, gravityZ);
             }
         }
     }
@@ -120,6 +120,14 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
 
         movingBall.setX((float) this.x);
         movingBall.setY((float) this.y);
+    }
+
+    public void updateSensorValues(double gravityX, double gravityY, double gravityZ) {
+        TextView sensorStatus = findViewById(R.id.sensorValues);
+        String sensorValues = String.format(Locale.ENGLISH, "gravity_x: %.2f\n" +
+                "gravity_y: %.2f\ngravity_z: %.2f\nx: %.2f\ny: %.2f\nvx: %.2f\nvy: %.2f\n",
+                gravityX, gravityY, gravityZ, this.x, this.y, this.vx, this.vy);
+        sensorStatus.setText(sensorValues);
     }
 
 
