@@ -67,7 +67,7 @@ public class GyroActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void screenClick(View view) {
-        View layout = findViewById(R.id.layout);
+        View layout = findViewById(R.id.gravityLayout);
         this.layoutRight = layout.getRight();
         this.layoutBottom = layout.getBottom();
 
