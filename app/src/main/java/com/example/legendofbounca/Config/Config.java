@@ -8,4 +8,5 @@ public class Config {
     public static final float NS2US = 1.0f / 1000.0f; // ns to microsecond
     public static final float US2S = 1.0f / 1000000.0f; // ns to microsecond
     public static final double LOSS_COEFFICIENT = .9;
+    public static final double STANDARD_GRAVITY = 9.81;
 }
