@@ -49,13 +49,15 @@ public class Ball {
 
         if(isOnBottomX)
             fy = (vx == 0 && vy == 0 && Math.tan(angleX) < Config.MU_S) ? 0 :
-                    (gravityY - (vy / Math.abs(vy)) * Math.abs(gravityX) * Config.MU_K) * Config.MASS;
+                    (gravityY
+                            - (vy != 0 ? vy / Math.abs(vy) : 0) * Math.abs(gravityX) * Config.MU_K) * Config.MASS;
         else
             fy = gravityY * Config.MASS;
 
         if(isOnBottomY)
             fx = (vy == 0 && vx == 0 && Math.tan(angleY) < Config.MU_S) ? 0 :
-                    (gravityX - (vx / Math.abs(vx)) * Math.abs(gravityY) * Config.MU_K) * Config.MASS;
+                    (gravityX
+                            - (vx != 0 ? vx / Math.abs(vx) : 0) * Math.abs(gravityY) * Config.MU_K) * Config.MASS;
         else
             fx = gravityX * Config.MASS;
 
@@ -71,14 +73,13 @@ public class Ball {
         float newVX = ax * time_slice + vx;
         float newVY = ay * time_slice + vy;
 
-        float energy = vx * vx + vy * vy;
+        vx = (newX >= RightWall || newX <= 0) ? (float) (-newVX) : newVX;
+        vy = (newY >= Floor || newY <= 0) ? (float) (-newVY) : newVY;
 
-        vx = (newX >= RightWall || newX <= 0) ?
-                (float) ((-newVX / Math.abs(newVX)) * Math.sqrt(energy * Config.LOSS_COEFFICIENT - vy * vy))
-                : newVX;
-        vy = (newY >= Floor || newY <= 0) ?
-                (float) ((-newVY / Math.abs(newVY)) * Math.sqrt(energy * Config.LOSS_COEFFICIENT - vx * vx))
-                : newVY;
+        double collisionReduction = (newX >= RightWall || newX <= 0 || newY >= Floor || newY <= 0) ?
+                Math.sqrt(Config.LOSS_COEFFICIENT) : 1;
+        vx *= collisionReduction;
+        vy *= collisionReduction;
 
         if(isOnBottomX && Math.abs(vx) < 20)
             vx = 0;
