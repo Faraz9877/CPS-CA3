@@ -5,13 +5,14 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:onClick="screenClick"
     tools:context=".Activities.GravityActivity">
 
     <ImageView
         android:id="@+id/movingBall"
-        android:layout_width="96dp"
-        android:layout_height="73dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/moving_ball_image_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
