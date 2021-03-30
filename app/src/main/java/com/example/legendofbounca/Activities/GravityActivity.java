@@ -75,7 +75,7 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
                 readSensorTimestamp = sensorEvent.timestamp;
                 ball.move(gravityX, gravityY, gravityZ, dT, this.layout);
 //                moveBall(gravityX, gravityY, gravityZ, dT);
-//                updateSensorValues(gravityX, gravityY, gravityZ);
+                updateSensorValues(gravityX, gravityY, gravityZ);
             }
         }
     }
@@ -108,13 +108,13 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
 //        ball.setY((float) this.y);
 //    }
 
-//    public void updateSensorValues(float gravityX, float gravityY, float gravityZ) {
-//        TextView sensorStatus = findViewById(R.id.sensorValues);
-//        String sensorValues = String.format(Locale.ENGLISH, "gravity_x: %.2f\n" +
-//                "gravity_y: %.2f\ngravity_z: %.2f\nx: %.2f\ny: %.2f\nvx: %.2f\nvy: %.2f\n",
-//                gravityX, gravityY, gravityZ, this.x, this.y, this.vx, this.vy);
-//        sensorStatus.setText(sensorValues);
-//    }
+    public void updateSensorValues(float gravityX, float gravityY, float gravityZ) {
+        TextView sensorStatus = findViewById(R.id.sensorValues);
+        String sensorValues = String.format(Locale.ENGLISH, "gravity_x: %.2f\n" +
+                "gravity_y: %.2f\ngravity_z: %.2f\nx: %.2f\ny: %.2f\nvx: %.2f\nvy: %.2f\n",
+                gravityX, gravityY, gravityZ, ball.getX(), ball.getY(), ball.getVx(), ball.getVy());
+        sensorStatus.setText(sensorValues);
+    }
 
 
 
