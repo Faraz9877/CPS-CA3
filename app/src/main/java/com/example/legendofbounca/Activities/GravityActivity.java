@@ -35,17 +35,9 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gravity);
         this.layout = findViewById(R.id.gravityLayout);
-        setupBall();
+        this.ball = new Ball((ImageView)findViewById(R.id.movingBall), 0, 0, Config.MASS);
         this.sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         this.gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-    }
-
-    private void setupBall() {
-        Random random = new Random();
-        float x0 = random.nextInt(this.layout.getRight() - 1);
-        float y0 = random.nextInt(this.layout.getBottom() - 1);
-        this.ball = new Ball((ImageView)findViewById(R.id.movingBall), x0, y0, Config.MASS);
-
     }
 
     public void screenClick(View view) {
