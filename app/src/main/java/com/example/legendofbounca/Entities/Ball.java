@@ -37,8 +37,8 @@ public class Ball {
         int RightWall = boardLayout.getRight() - this.imageView.getWidth();
         int Floor = boardLayout.getBottom() - this.imageView.getHeight();
 
-        boolean bottomX = gravityX > 0; // False for left wall as bottom, true for right wall as bottom
-        boolean bottomY = gravityY > 0; // False for ceiling as bottom, true for floor as bottom
+        boolean bottomX = gravityX > 0; // False for Leftwall as bottom, true for RightWall as bottom
+        boolean bottomY = gravityY > 0; // False for Ceiling as bottom, true for Floor as bottom
 
         boolean isOnBottomX = ((!bottomX || gravityX == 0) && x == 0 || (bottomX || gravityX == 0) && x == RightWall);
         boolean isOnBottomY = ((!bottomY || gravityY == 0) && y == 0 || (bottomY || gravityY == 0) && y == Floor);
@@ -48,16 +48,16 @@ public class Ball {
         float fx, fy;
 
         if(isOnBottomX) {
-            fy = (vx == 0 && vy == 0 && Math.tan(angleX) < Config.MU_S) ?
-                0 : (gravityY - (vy / Math.abs(vy)) * Math.abs(gravityX) * Config.MU_K) * Config.MASS;
+            fy = (vx == 0 && vy == 0 && Math.tan(angleX) < Config.MU_S) ? 0 :
+                    (gravityY - (vy != 0 ? vy / Math.abs(vy) : 0) * Math.abs(gravityX) * Config.MU_K) * Config.MASS;
         }
         else {
             fy = gravityY * Config.MASS;
         }
 
         if(isOnBottomY) {
-            fx = (vy == 0 && vx == 0 && Math.tan(angleY) < Config.MU_S) ?
-                0 : (gravityX - (vx / Math.abs(vx)) * Math.abs(gravityY) * Config.MU_K) * Config.MASS;
+            fx = (vy == 0 && vx == 0 && Math.tan(angleY) < Config.MU_S) ? 0 :
+                    (gravityX - (vx != 0 ? vx / Math.abs(vx) : 0) * Math.abs(gravityY) * Config.MU_K) * Config.MASS;
         }
         else {
             fx = gravityX * Config.MASS;
@@ -75,17 +75,18 @@ public class Ball {
         float newVX = ax * time_slice + vx;
         float newVY = ay * time_slice + vy;
 
-        float energy = vx * vx + vy * vy;
+        vx = (newX >= RightWall || newX <= 0) ? (float) (-newVX) : newVX;
+        vy = (newY >= Floor || newY <= 0) ? (float) (-newVY) : newVY;
 
-        vx = (newX >= RightWall || newX <= 0) ? (float) ((-newVX / Math.abs(newVX)) * Math.sqrt(energy * Config.LOSS_COEFFICIENT - vy * vy)) : newVX;
-        vy = (newY >= Floor || newY <= 0) ? (float) ((-newVY / Math.abs(newVY)) * Math.sqrt(energy * Config.LOSS_COEFFICIENT - vx * vx)) : newVY;
+        double collisionReduction = (newX >= RightWall || newX <= 0 || newY >= Floor || newY <= 0) ?
+                Math.sqrt(Config.LOSS_COEFFICIENT) : 1;
+        vx *= collisionReduction;
+        vy *= collisionReduction;
 
-        if(isOnBottomX && Math.abs(vx) < 20) {
+        if(isOnBottomX && Math.abs(vx) < 20)
             vx = 0;
-        }
-        if(isOnBottomY && Math.abs(vy) < 20) {
+        if(isOnBottomY && Math.abs(vy) < 20)
             vy = 0;
-        }
 
         this.imageView.setX(this.x);
         this.imageView.setY(this.y);
