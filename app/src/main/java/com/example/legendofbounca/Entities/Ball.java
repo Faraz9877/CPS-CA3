@@ -1,16 +1,19 @@
 package com.example.legendofbounca.Entities;
 
+import android.hardware.SensorManager;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.example.legendofbounca.Config.Config;
 import com.example.legendofbounca.R;
 
+import java.util.zip.CheckedOutputStream;
+
 public class Ball {
     ImageView imageView;
     private float x, y;
     private float vx, vy;
-    private float ax, ay;
+    private float mass;
 
     public Ball(ImageView imageView, float x, float y, float mass) {
         this.imageView = imageView;
@@ -18,6 +21,7 @@ public class Ball {
         this.y = y;
         this.vx = 0;
         this.vy = 0;
+        this.mass = mass;
     }
 
     public void changeInitialPosition(float x, float y) {
@@ -30,63 +34,60 @@ public class Ball {
         imageView.setY(y);
     }
 
-    public void move(float gravityX, float gravityY, float gravityZ, float dT, View boardLayout) {
-        double angleX = Math.asin(gravityX / Config.STANDARD_GRAVITY);
-        double angleY = Math.asin(gravityY / Config.STANDARD_GRAVITY);
+    public void moveByGravity(float gravityX, float gravityY, float time_slice, View boardLayout) {
+        float xN = (float) (this.mass * SensorManager.STANDARD_GRAVITY);
+        float yN = (float) (this.mass * SensorManager.STANDARD_GRAVITY);
 
-        int RightWall = boardLayout.getRight() - this.imageView.getWidth();
-        int Floor = boardLayout.getBottom() - this.imageView.getHeight();
+        int RightWall = boardLayout.getRight() - this.getWidth();
+        int Floor = boardLayout.getBottom() - this.getHeight();
 
-        boolean bottomX = gravityX > 0; // False for Leftwall as bottom, true for RightWall as bottom
-        boolean bottomY = gravityY > 0; // False for Ceiling as bottom, true for Floor as bottom
-
-        boolean isOnBottomX = ((!bottomX || gravityX == 0) && x == 0 || (bottomX || gravityX == 0) && x == RightWall);
-        boolean isOnBottomY = ((!bottomY || gravityY == 0) && y == 0 || (bottomY || gravityY == 0) && y == Floor);
-
-        final float time_slice = dT * Config.US2S;
-
-        float fx, fy;
-
-        if(isOnBottomX) {
-            fy = (vx == 0 && vy == 0 && Math.tan(angleX) < Config.MU_S) ? 0 :
-                    (gravityY - (vy != 0 ? vy / Math.abs(vy) : 0) * Math.abs(gravityX) * Config.MU_K) * Config.MASS;
-        }
-        else {
-            fy = gravityY * Config.MASS;
+        if(this.vx == 0) {
+            if(Math.abs(this.mass * gravityX) >= Math.abs(xN * Config.MU_S)) {
+                this.vx += (gravityX * time_slice);
+                float delta_x = (float) (gravityX * Math.pow(time_slice, 2) / 2 + this.vx * time_slice) * 250;
+                this.x -= delta_x;
+            }
+        } else {
+            if(this.vx > 0)
+                gravityX -= this.mass / (Config.MU_K * xN);
+            else
+                gravityX += this.mass / (Config.MU_K * xN);
+            this.vx += (gravityX * time_slice);
+            float delta_x = (float) (gravityX * Math.pow(time_slice, 2) / 2 + this.vx * time_slice) * 250;
+            this.x -= delta_x;
         }
 
-        if(isOnBottomY) {
-            fx = (vy == 0 && vx == 0 && Math.tan(angleY) < Config.MU_S) ? 0 :
-                    (gravityX - (vx != 0 ? vx / Math.abs(vx) : 0) * Math.abs(gravityY) * Config.MU_K) * Config.MASS;
+        if (this.x >= RightWall) {
+            this.x = RightWall;
+            this.vx = (float) -Math.sqrt(Config.LOSS_COEFFICIENT) * this.vx;
+        } else if (this.x <= 0) {
+            this.x = 0;
+            this.vx = (float) -Math.sqrt(Config.LOSS_COEFFICIENT) * this.vx;
         }
-        else {
-            fx = gravityX * Config.MASS;
+
+        if(this.vy == 0) {
+            if(Math.abs(this.mass * gravityY) >= Math.abs(yN * Config.MU_S)) {
+                this.vy += (gravityY * time_slice);
+                float delta_y = (float) (gravityY * Math.pow(time_slice, 2) / 2 + this.vy * time_slice) * 250;
+                this.y += delta_y;
+            }
+        } else {
+            if(this.vy > 0)
+                gravityY -= this.mass / (Config.MU_K * yN);
+            else
+                gravityY += this.mass / (Config.MU_K * yN);
+            this.vy += (gravityY * time_slice);
+            float delta_y = (float) (gravityY * Math.pow(time_slice, 2) / 2 + this.vy * time_slice) * 250;
+            this.y += delta_y;
         }
 
-        float ax = fx / Config.MASS * Config.ACCELERATION_COEFFICIENT;
-        float ay = fy / Config.MASS * Config.ACCELERATION_COEFFICIENT;
-
-        float newX = (0.5f) * ax * time_slice * time_slice + vx * time_slice + x;
-        float newY = (0.5f) * ay * time_slice * time_slice  + vy * time_slice + y;
-
-        x = (newX >= RightWall) ? RightWall : (newX <= 0) ? 0 : newX;
-        y = (newY >= Floor) ? Floor : (newY <= 0) ? 0 : newY;
-
-        float newVX = ax * time_slice + vx;
-        float newVY = ay * time_slice + vy;
-
-        vx = (newX >= RightWall || newX <= 0) ? (float) (-newVX) : newVX;
-        vy = (newY >= Floor || newY <= 0) ? (float) (-newVY) : newVY;
-
-        double collisionReduction = (newX >= RightWall || newX <= 0 || newY >= Floor || newY <= 0) ?
-                Math.sqrt(Config.LOSS_COEFFICIENT) : 1;
-        vx *= collisionReduction;
-        vy *= collisionReduction;
-
-        if(isOnBottomX && Math.abs(vx) < 20)
-            vx = 0;
-        if(isOnBottomY && Math.abs(vy) < 20)
-            vy = 0;
+        if (this.y > Floor) {
+            this.y = Floor;
+            this.vy =  (float) -Math.sqrt(Config.LOSS_COEFFICIENT) * this.vy;
+        } else if (this.y < 0) {
+            this.y = 0;
+            this.vy =  (float) -Math.sqrt(Config.LOSS_COEFFICIENT) * this.vy;
+        }
 
         this.imageView.setX(this.x);
         this.imageView.setY(this.y);

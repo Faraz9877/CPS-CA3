@@ -7,7 +7,7 @@ public class Config {
     public static final int READ_SENSOR_RATE = 10; // sensor read rate in microsecond
     public static final float NS2US = 1.0f / 1000.0f; // ns to microsecond
     public static final float US2S = 1.0f / 1000000.0f; // ns to microsecond
+    public static final float NS2S = 1.0f / 1000000000.0f;
     public static final float LOSS_COEFFICIENT = 0.9f;
     public static final float STANDARD_GRAVITY = 9.81f;
-    public static final int ACCELERATION_COEFFICIENT = 30;
 }

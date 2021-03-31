@@ -62,22 +62,20 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_GRAVITY) {
-            float dT = (sensorEvent.timestamp - readSensorTimestamp) * Config.NS2US;
-            if (dT > Config.READ_SENSOR_RATE) {
-                float gravityX = - sensorEvent.values[0];
-                float gravityY = sensorEvent.values[1];
-                float gravityZ = sensorEvent.values[2];
-                readSensorTimestamp = sensorEvent.timestamp;
-                ball.move(gravityX, gravityY, gravityZ, dT, this.layout);
-                updateSensorValues(gravityX, gravityY, gravityZ);
-            }
-        }
+        if (sensorEvent.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE)
+            return;
+        float dT = (sensorEvent.timestamp - readSensorTimestamp) * Config.NS2S;
+        float gravityX = sensorEvent.values[0];
+        float gravityY = sensorEvent.values[1];
+        float gravityZ = sensorEvent.values[2];
+        readSensorTimestamp = sensorEvent.timestamp;
+        ball.moveByGravity(gravityX, gravityY, dT, this.layout);
+        updateSensorValues(gravityX, gravityY, gravityZ);
     }
 
     public void updateSensorValues(float gravityX, float gravityY, float gravityZ) {
         TextView sensorStatus = findViewById(R.id.sensorValues);
-        String sensorValues = String.format(Locale.ENGLISH, "gravity_x: %.2f\n" +
+        String sensorValues = String.format(Locale.ENGLISH, "Gravity mode\ngravity_x: %.2f\n" +
                 "gravity_y: %.2f\ngravity_z: %.2f\nx: %.2f\ny: %.2f\nvx: %.2f\nvy: %.2f\n",
                 gravityX, gravityY, gravityZ, ball.getX(), ball.getY(), ball.getVx(), ball.getVy());
         sensorStatus.setText(sensorValues);
