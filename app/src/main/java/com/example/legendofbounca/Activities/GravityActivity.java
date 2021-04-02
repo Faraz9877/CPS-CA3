@@ -69,7 +69,7 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
                 float gravityY = sensorEvent.values[1];
                 float gravityZ = sensorEvent.values[2];
                 readSensorTimestamp = sensorEvent.timestamp;
-                ball.move(gravityX, gravityY, gravityZ, dT, this.layout);
+                ball.move(gravityX, gravityY, dT, this.layout);
                 updateSensorValues(gravityX, gravityY, gravityZ);
             }
         }

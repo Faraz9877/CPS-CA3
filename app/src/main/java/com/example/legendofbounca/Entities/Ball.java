@@ -30,7 +30,7 @@ public class Ball {
         imageView.setY(y);
     }
 
-    public void move(float gravityX, float gravityY, float gravityZ, float dT, View boardLayout) {
+    public void move(float gravityX, float gravityY, float dT, View boardLayout) {
         double angleX = Math.asin(gravityX / Config.STANDARD_GRAVITY);
         double angleY = Math.asin(gravityY / Config.STANDARD_GRAVITY);
 
