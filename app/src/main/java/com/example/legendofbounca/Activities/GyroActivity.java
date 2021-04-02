@@ -70,7 +70,7 @@ public class GyroActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             float dT = (sensorEvent.timestamp - readSensorTimestamp) * Config.NS2US;
-            if (dT > Config.READ_SENSOR_RATE) {
+            if (dT > /*Config.READ_SENSOR_RATE*/ 0) {
                 double rotationAroundX = sensorEvent.values[0];
                 double rotationAroundY = sensorEvent.values[1];
                 double rotationAroundZ = sensorEvent.values[2];
