@@ -79,8 +79,8 @@ public class GyroActivity extends AppCompatActivity implements SensorEventListen
                 tetha[1] += rotationAroundY * dT * Config.US2S;
                 tetha[2] += rotationAroundZ * dT * Config.US2S;
 
-                double gravityX = Config.STANDARD_GRAVITY * Math.sin(tetha[0]);
-                double gravityY = Config.STANDARD_GRAVITY * Math.sin(tetha[1]);
+                double gravityX = Config.STANDARD_GRAVITY * Math.sin(tetha[1]); // gravityX is sin(rotationAroundY)
+                double gravityY = Config.STANDARD_GRAVITY * Math.sin(tetha[0]); // gravityY is sin(rotationAroundX)
                 double gravityZ = Config.STANDARD_GRAVITY * Math.cos(tetha[2]);
 
                 ball.move(gravityX, gravityY, dT, this.layout);
