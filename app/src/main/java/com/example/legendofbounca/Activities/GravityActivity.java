@@ -31,7 +31,7 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gravity);
         this.layout = findViewById(R.id.gravityLayout);
-        this.ball = new Ball((ImageView)findViewById(R.id.movingBall), 0, 0, Config.MASS);
+        this.ball = new Ball((ImageView)findViewById(R.id.movingBall), 0, 0);
         this.sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         this.gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     }
@@ -64,10 +64,10 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_GRAVITY) {
             float dT = (sensorEvent.timestamp - readSensorTimestamp) * Config.NS2US;
-            if (dT > Config.READ_SENSOR_RATE) {
-                float gravityX = - sensorEvent.values[0];
-                float gravityY = sensorEvent.values[1];
-                float gravityZ = sensorEvent.values[2];
+            if (dT > /*Config.READ_SENSOR_RATE*/ 0) {
+                double gravityX = - sensorEvent.values[0];
+                double gravityY = sensorEvent.values[1];
+                double gravityZ = sensorEvent.values[2];
                 readSensorTimestamp = sensorEvent.timestamp;
                 ball.move(gravityX, gravityY, dT, this.layout);
                 updateSensorValues(gravityX, gravityY, gravityZ);
@@ -75,7 +75,7 @@ public class GravityActivity extends AppCompatActivity implements SensorEventLis
         }
     }
 
-    public void updateSensorValues(float gravityX, float gravityY, float gravityZ) {
+    public void updateSensorValues(double gravityX, double gravityY, double gravityZ) {
         TextView sensorStatus = findViewById(R.id.sensorValues);
         String sensorValues = String.format(Locale.ENGLISH, "gravity_x: %.2f\n" +
                 "gravity_y: %.2f\ngravity_z: %.2f\nx: %.2f\ny: %.2f\nvx: %.2f\nvy: %.2f\n",

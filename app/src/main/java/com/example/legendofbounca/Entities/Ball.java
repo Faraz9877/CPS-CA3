@@ -10,9 +10,8 @@ public class Ball {
     ImageView imageView;
     private float x, y;
     private float vx, vy;
-    private float ax, ay;
 
-    public Ball(ImageView imageView, float x, float y, float mass) {
+    public Ball(ImageView imageView, float x, float y) {
         this.imageView = imageView;
         this.x = x;
         this.y = y;
@@ -30,7 +29,7 @@ public class Ball {
         imageView.setY(y);
     }
 
-    public void move(float gravityX, float gravityY, float dT, View boardLayout) {
+    public void move(double gravityX, double gravityY, float dT, View boardLayout) {
         double angleX = Math.asin(gravityX / Config.STANDARD_GRAVITY);
         double angleY = Math.asin(gravityY / Config.STANDARD_GRAVITY);
 
@@ -49,18 +48,18 @@ public class Ball {
 
         if(isOnBottomX) {
             fy = (vx == 0 && vy == 0 && Math.tan(angleX) < Config.MU_S) ? 0 :
-                    (gravityY - (vy != 0 ? vy / Math.abs(vy) : 0) * Math.abs(gravityX) * Config.MU_K) * Config.MASS;
+                    (float) ((gravityY - (vy != 0 ? vy / Math.abs(vy) : 0) * Math.abs(gravityX) * Config.MU_K) * Config.MASS);
         }
         else {
-            fy = gravityY * Config.MASS;
+            fy = (float) (gravityY * Config.MASS);
         }
 
         if(isOnBottomY) {
             fx = (vy == 0 && vx == 0 && Math.tan(angleY) < Config.MU_S) ? 0 :
-                    (gravityX - (vx != 0 ? vx / Math.abs(vx) : 0) * Math.abs(gravityY) * Config.MU_K) * Config.MASS;
+                    (float) ((gravityX - (vx != 0 ? vx / Math.abs(vx) : 0) * Math.abs(gravityY) * Config.MU_K) * Config.MASS);
         }
         else {
-            fx = gravityX * Config.MASS;
+            fx = (float) (gravityX * Config.MASS);
         }
 
         float ax = fx / Config.MASS * Config.ACCELERATION_COEFFICIENT;
@@ -83,9 +82,9 @@ public class Ball {
         vx *= collisionReduction;
         vy *= collisionReduction;
 
-        if(isOnBottomX && Math.abs(vx) < 20)
+        if(isOnBottomX && Math.abs(vx) < 100)
             vx = 0;
-        if(isOnBottomY && Math.abs(vy) < 20)
+        if(isOnBottomY && Math.abs(vy) < 100)
             vy = 0;
 
         this.imageView.setX(this.x);
